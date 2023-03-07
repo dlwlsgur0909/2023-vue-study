@@ -3,7 +3,12 @@ const path = require('path'); // node에서 제공하는 절대경로 찾는 기
 
 module.exports = {
     mode: 'development',
-    devtool: 'eval', 
+    devtool: 'eval',
+    devServer: {
+        devMiddleware: { publicPath: '/dist' },
+        static: { directory: path.resolve(__dirname) },
+        hot: true
+    },
     resolve: {
         extensions: ['.js', '.vue'],
     },
@@ -31,5 +36,6 @@ module.exports = {
     output: {
         filename: 'app.js', // [name].js
         path: path.join(__dirname, 'dist'),
+        // publicPath: '/dist',
     },
 };
