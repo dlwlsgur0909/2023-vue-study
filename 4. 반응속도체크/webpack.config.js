@@ -11,10 +11,19 @@ module.exports = {
         app: path.join(__dirname, 'main.js'),
     },
     module: {
-        rules:[{
-            test: /\.vue$/, // .vue로 끝나는 파일 정규 표현식
-            loader: 'vue-loader',
-        }]
+        rules:[
+            {
+                test: /\.vue$/, // .vue로 끝나는 파일 정규 표현식
+                loader: 'vue-loader',
+            },
+            {
+                test: /\.css$/,
+                use: [
+                    'vue-style-loader',
+                    'css-loader',
+                ]
+            }
+        ],
     },
     plugins: [
         new VueLoaderPlugin(),
