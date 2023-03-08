@@ -5,6 +5,8 @@
 
 <script>
 
+    import EventBus from './EventBus';
+
     export default {
         props: {
             cellData: String,
@@ -27,60 +29,8 @@
                     return;
                 }
 
-                const rootData = this.$root.$data;
-                this.$set(rootData.tableData[this.rowIndex], [this.cellIndex], rootData.turn);
-
-                let win = false;
-                const turn = rootData.turn;
-                const tableData = rootData.tableData;
-                if(tableData[this.rowIndex][0] === turn && tableData[this.rowIndex][1] === turn && tableData[this.rowIndex][2] === turn) {
-                    win = true;
-                }
-                if(tableData[0][this.cellIndex] === turn && tableData[1][this.cellIndex] === turn && tableData[2][this.cellIndex] === turn) {
-                    win = true;
-                }
-                if(tableData[0][0] === turn && tableData[1][1] === turn && tableData[2][2] === turn) {
-                    win = true;
-                }
-                if(tableData[0][2] === turn && tableData[1][1] === turn && tableData[2][0] === turn) {
-                    win = true;
-                }
-
-
-                if(win) { // 이긴 경우
-                    rootData.winner = turn;
-                    rootData.turn = 'O';
-                    rootData.tableData = [
-                        ['', '', ''],
-                        ['', '', ''],
-                        ['', '', '']
-                    ];
-                }else { // 아직 승자가 없는 경우
-
-                    let draw = true;
-                    
-                    // 무승부 검사
-                    tableData.forEach((row) => {
-                        row.forEach((cell) => {
-                            if(!cell) {
-                                draw = false;
-                            }
-                        });
-                    });
-
-                    if(draw) { // 무승부
-                        rootData.turn = 'O';
-                        rootData.winner = '';
-                        rootData.tableData = [
-                            ['', '', ''],
-                            ['', '', ''],
-                            ['', '', '']
-                        ];
-
-                    }else {
-                        rootData.turn = rootData.turn === 'O' ? 'X' : 'O';
-                    }
-                }
+                EventBus.$emit('clickTd', this.rowIndex, this.cellIndex);
+                
             }
         }
     };
