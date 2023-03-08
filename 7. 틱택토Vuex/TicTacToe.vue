@@ -15,16 +15,13 @@
         components: {
             TableComponent,
         },
-        data() {
-            return {
-               tableData: [
-                ['', '', ''], 
-                ['', '', ''], 
-                ['', '', ''],
-               ],
-               turn: 'O',
-               winner: '',
-            }
+        computed: {
+            winner() {
+                return this.$store.state.winner;
+            }, 
+            turn() {
+                return this.$store.state.turn;
+            },
         },
     };
 </script>
