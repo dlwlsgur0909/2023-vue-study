@@ -5,7 +5,7 @@
 
 <script>
 
-    import EventBus from './EventBus';
+    import { CLICK_CELL, SET_WINNER, CHANGE_TURN, NO_WINNER, RESET_GAME } from './store'; // store.js에서 선언한 mutation 변수 import 
 
     export default {
         props: {
@@ -29,9 +29,49 @@
                     return;
                 }
 
-                EventBus.$emit('clickTd', this.rowIndex, this.cellIndex);
-                
-            }
+                this.$store.commit(CLICK_CELL, {row: this.rowIndex, cell: this.cellIndex}); // store.js에 저장된 mutation중 CLICK_CELL을 commit을 통해 불러온다
+
+                let win = false;
+                const turn = this.turn;
+                const tableData = this.tableData;
+                if(tableData[this.rowIndex][0] === turn && tableData[this.rowIndex][1] === turn && tableData[this.rowIndex][2] === turn) {
+                    win = true;
+                }
+                if(tableData[0][this.cellIndex] === turn && tableData[1][this.cellIndex] === turn && tableData[2][this.cellIndex] === turn) {
+                    win = true;
+                }
+                if(tableData[0][0] === turn && tableData[1][1] === turn && tableData[2][2] === turn) {
+                    win = true;
+                }
+                if(tableData[0][2] === turn && tableData[1][1] === turn && tableData[2][0] === turn) {
+                    win = true;
+                }
+
+
+                if(win) { // 이긴 경우
+                    this.$store.commit(SET_WINNER, this.turn);
+                    this.$store.commit(RESET_GAME);
+                }else { // 아직 승자가 없는 경우
+
+                    let draw = true;
+                    
+                    // 무승부 검사
+                    tableData.forEach((row) => {
+                        row.forEach((cell) => {
+                            if(!cell) {
+                                draw = false;
+                            }
+                        });
+                    });
+
+                    if(draw) { // 무승부
+                        this.$store.commit(NO_WINNER);
+                        this.$store.commit(RESET_GAME);
+                    }else {
+                        this.$store.commit(CHANGE_TURN);
+                    }
+                }
+            },
         }
     };
 
