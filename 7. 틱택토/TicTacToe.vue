@@ -6,7 +6,7 @@
 </template>
 
 <script>
-   
+    import Vue from 'vue';
     import TableComponent from './TableComponent.vue'; 
 
     export default {
@@ -25,7 +25,14 @@
             }
         },
         methods: {
-           
+           onChangeData() {
+            // this.tableData[1][0] = 'X'; 화면에 적용되지 않음
+            
+            // Vue를 import해서 Vue.set을 사용하면 화면에 적용된다
+            // import 하지않고 this.$set()으로도 가능하다
+            Vue.set(this.tableData[1], 0, 'X');
+
+           }
         },
         computed: {
           
