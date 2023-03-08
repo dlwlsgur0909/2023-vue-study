@@ -1,7 +1,7 @@
 <template>
     
     <tr>
-        <td-component v-for="(cellData, index) in rowData" :cell-data="cellData" :cell-index="cellIndex" :row-index="rowIndex" ></td-component>
+        <td-component v-for="(cellData, index) in rowData" :key="index" :cell-data="cellData" :cell-index="index" :row-index="rowIndex" ></td-component>
     </tr>
 
 </template>
@@ -18,6 +18,11 @@
         props: {
             rowData: Array,
             rowIndex: Number,
+        },
+        data() {
+            return {
+                parent: 'tr컴포넌트',
+            }
         },
     };
 
