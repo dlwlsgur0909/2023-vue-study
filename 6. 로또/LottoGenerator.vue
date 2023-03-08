@@ -46,7 +46,6 @@
             this.winBalls = [];
             this.bonus = null;
             this.redo = false;
-            this.showBalls();
            },
            showBalls() {
                 // 당첨 번호 출력
@@ -63,7 +62,6 @@
                 }, 7000);
            }
         },
-        
         computed: {
           
            
@@ -77,7 +75,12 @@
             });
         },
         watch: {
-
+            // 객체(winBalls)가 아닌 primitive value(bonus, redo같은)를 사용하는게 좋지만, watch를 최대한 사용하지 않는게 바람직하다
+           winBalls(newVal, oldVal) {
+                if(newVal.length === 0) { 
+                    this.showBalls();
+                }
+           } 
         }
     };
 </script>
