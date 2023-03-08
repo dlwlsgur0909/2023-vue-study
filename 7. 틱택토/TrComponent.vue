@@ -21,7 +21,7 @@
         },
         data() {
             return {
-                parent: 'tr컴포넌트',
+                
             }
         },
     };
