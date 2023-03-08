@@ -2,6 +2,8 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 
 
+Vue.use(Vuex); // vue와 vuex를 연결
+
 // object dynamic property (mutation을 변수로)
 // 저장된 mutation들을 component에서 사용할 때 오타를 방지하기 위해 변수로 선언
 export const SET_WINNER = 'SET_WINNER';  // import { SET_WINNER } from './store'; 구문을 통해 사용 가능
@@ -31,7 +33,8 @@ export default new Vuex.Store({ // import store(아무 이름) from './store'; �
             Vue.set(state.tableData[row], cell, state.turn);
         },
         [CHANGE_TURN](state) {
-            state.turn = state.turn = 'O' ? 'X' : 'O';
+            state.turn = state.turn === 'O' ? 'X' : 'O';
+            console.log(state.turn);
         },
         [RESET_GAME](state) {
             state.turn = 'O';
