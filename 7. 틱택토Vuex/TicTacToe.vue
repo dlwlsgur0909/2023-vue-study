@@ -7,6 +7,7 @@
 </template>
 
 <script>
+    import { mapState } from 'vuex';
     import store from './store'; // vuex와 최상위 부모 component(TicTacToe.vue)를 연결 
     import TableComponent from './TableComponent.vue'; 
 
@@ -16,12 +17,20 @@
             TableComponent,
         },
         computed: {
-            winner() {
-                return this.$store.state.winner;
-            }, 
-            turn() {
-                return this.$store.state.turn;
-            },
+            ...mapState(['winner', 'turn']), // mapState를 활용해서 한번에 state와 computed를 연결
+            // 아래와 같은 방법도 가능
+            // ...mapState({
+            //     winner(state) {
+            //          return state.winner
+            //     },
+            //     turnState: 'turn',
+            // })
+            // winner() {
+            //     return this.$store.state.winner;
+            // }, 
+            // turn() {
+            //     return this.$store.state.turn;
+            // },
         },
     };
 </script>

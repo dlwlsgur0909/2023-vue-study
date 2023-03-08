@@ -6,22 +6,32 @@
 <script>
 
     import { CLICK_CELL, SET_WINNER, CHANGE_TURN, NO_WINNER, RESET_GAME } from './store'; // store.js에서 선언한 mutation 변수 import 
-
+    import { mapState } from 'vuex';
     export default {
         props: {
             cellIndex: Number,
             rowIndex: Number,
         },
-        computed: { // vuex에 등록한 state값을 사용하기 위해서는 computed에 반드시 연결을 해야한다.
-            cellData() { // 부모 component에서 data를 받지 않고 vuex를 통해 바로 data를 하위 component로 전달 가능 
-                return this.$store.state.tableData[this.rowIndex][this.cellIndex];
-            },
-            tableData() {
-                return this.$store.state.tableData;
-            },
-            turn() {
-                return this.$store.state.turn;
-            },
+        computed: { 
+            ...mapState({
+                tableData: state => state.tableData,
+                turn: state => state.turn,
+                cellData(state) {
+                    return state.tableData[this.rowIndex][this.cellIndex];
+                }
+            })
+            
+            // mapState 사용전
+            // vuex에 등록한 state값을 사용하기 위해서는 computed에 반드시 연결을 해야한다.
+            // cellData() { // 부모 component에서 data를 받지 않고 vuex를 통해 바로 data를 하위 component로 전달 가능 
+            //     return this.$store.state.tableData[this.rowIndex][this.cellIndex];
+            // },
+            // tableData() {
+            //     return this.$store.state.tableData;
+            // },
+            // turn() {
+            //     return this.$store.state.turn;
+            // },
         },
         methods: {
             onClickTd() {
