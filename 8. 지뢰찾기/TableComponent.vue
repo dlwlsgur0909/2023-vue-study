@@ -1,22 +1,20 @@
 <template>
     <table>
-        <tr-component v-for="(rowData, index) in tableData" :key="index" :row-index="index"></tr-component>
+        <tr v-for="(rowData, rowIndex) in tableData" :key="rowIndex">
+            <td v-for="(cellData, cellIndex) in rowData" :key="cellIndex" :style="cellDataStyle">{{ cellDataText }}</td>
+        </tr>
     </table>
 </template>
 
 <script>
 
-    import TrComponent from './TrComponent'
+    import { mapState } from 'vuex';
 
     export default {
-        components: {
-            TrComponent,
-        },
         computed: {
-            tableData() {
-                return this.$store.state.tableData;
-            },
-        },
+            ...mapState(['tableData']),
+        }
+
     };
 
 </script>
