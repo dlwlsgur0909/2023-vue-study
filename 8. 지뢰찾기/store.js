@@ -65,6 +65,7 @@ export default new Vuex.Store({ // import store(아무 이름) from './store'; �
             mine: 0,
         },
         timer: 0,
+        halted: true, // 게임 중단 여부
         result: '',
 
     }, // vue의 data와 비슷
@@ -83,6 +84,7 @@ export default new Vuex.Store({ // import store(아무 이름) from './store'; �
             };
             state.tableData = plantMine(row, cell, mine);
             state.timer = 0;
+            state.halted = false;
         },
         [OPEN_CELL](state) {
 
@@ -100,7 +102,7 @@ export default new Vuex.Store({ // import store(아무 이름) from './store'; �
 
         },
         [INCREMENT_TIMER](state) {
-
+            state.timer += 1;
         },
     }, // state를 수정할 때 사용 (동기적)
     actions: {

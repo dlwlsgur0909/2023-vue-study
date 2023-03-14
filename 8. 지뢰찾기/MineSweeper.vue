@@ -11,9 +11,11 @@
 
     import { mapState } from 'vuex';
 
-    import store from './store';
+    import store, { INCREMENT_TIMER } from './store';
     import TableComponent from './TableComponent.vue';
     import MineForm from './MineForm.vue';
+    
+    let interval;
 
     export default {
         store,
@@ -22,10 +24,21 @@
             MineForm,
         },
         computed: {
-            ...mapState(['timer', 'result']),
+            ...mapState(['timer', 'result', 'halted']),
         },
         methods: {
 
+        },
+        watch: {
+            halted(newValue, oldValue) {
+                if(newValue === false) { // 게임 시작
+                    interval = setInterval(() => {
+                        this.$store.commit(INCREMENT_TIMER);
+                    }, 1000); // 자바스크립트의 timer는 정확하지 않을 수 있다.
+                }else {
+                    clearInterval(interval); // 게임 중단 
+                }
+            }
         }
     }
 
