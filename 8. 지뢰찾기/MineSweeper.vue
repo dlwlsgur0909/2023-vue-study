@@ -34,7 +34,7 @@
                 if(newValue === false) { // 게임 시작
                     interval = setInterval(() => {
                         this.$store.commit(INCREMENT_TIMER);
-                    }, 1000); // 자바스크립트의 timer는 정확하지 않을 수 있다.
+                    }, 1000); // 자바스크립트의 timer는 정확하지 않을 수 있다
                 }else {
                     clearInterval(interval); // 게임 중단 
                 }
