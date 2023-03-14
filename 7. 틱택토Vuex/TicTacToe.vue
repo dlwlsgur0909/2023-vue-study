@@ -25,6 +25,8 @@
             //     },
             //     turnState: 'turn',
             // })
+            //
+            // mapState 없이 store에서 state값 연결 
             // winner() {
             //     return this.$store.state.winner;
             // }, 
