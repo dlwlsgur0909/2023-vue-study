@@ -86,8 +86,8 @@ export default new Vuex.Store({ // import store(아무 이름) from './store'; �
             state.timer = 0;
             state.halted = false;
         },
-        [OPEN_CELL](state) {
-
+        [OPEN_CELL](state, {row, cell}) {
+            Vue.set(state.tableData[row], cell, CODE.OPENED);
         },
         [CLICK_MINE](state) {
 

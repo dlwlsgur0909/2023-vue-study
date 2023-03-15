@@ -1,7 +1,8 @@
 <template>
     <table>
         <tr v-for="(rowData, rowIndex) in tableData" :key="rowIndex">
-            <td v-for="(cellData, cellIndex) in rowData" :key="cellIndex" :style="cellDataStyle(rowIndex, cellIndex)">{{ cellDataText(rowIndex, cellIndex) }}</td>
+            <td v-for="(cellData, cellIndex) in rowData" :key="cellIndex" :style="cellDataStyle(rowIndex, cellIndex)"
+                @click="onClickTd(rowIndex, cellIndex)">{{ cellDataText(rowIndex, cellIndex) }}</td>
         </tr>
     </table>
 </template>
@@ -9,11 +10,11 @@
 <script>
 
     import { mapState } from 'vuex';
-    import { CODE } from './store';
+    import { CODE, OPEN_CELL } from './store';
 
     export default {
         computed: {
-            ...mapState(['tableData']),
+            ...mapState(['tableData', 'halted']),
             cellDataStyle() {
                 return (row, cell) => {
                     switch(this.tableData[row][cell]){
@@ -57,7 +58,15 @@
                     }
                 }
             },
-        }
+        },
+        methods: {
+            onClickTd(row, cell) {
+                if(this.halted) {
+                    return;
+                }
+                this.$store.commit(OPEN_CELL, {row, cell});
+            },
+        },
     };
 
 </script>
