@@ -92,13 +92,27 @@ export default new Vuex.Store({ // import store(아무 이름) from './store'; �
         [CLICK_MINE](state) {
 
         },
-        [FLAG_CELL](state) {
+        [FLAG_CELL](state, {row, cell}) {
+            if(state.tableData[row][cell] === CODE.MINE) {
+                Vue.set(state.tableData[row], cell, CODE.FLAG_MINE);
+            }else {
+                Vue.set(state.tableData[row], cell, CODE.FLAG);
+            }
+        },
+        [QUESTION_CELL](state, {row, cell}) {
+            if(state.tableData[row][cell] === CODE.FLAG_MINE) {
+                Vue.set(state.tableData[row], cell, CODE.QUESTION_MINE);
+            }else {
+                Vue.set(state.tableData[row], cell, CODE.QUESTION);
+            }
 
         },
-        [QUESTION_CELL](state) {
-
-        },
-        [NORMARLIZE_CELL](state) {
+        [NORMARLIZE_CELL](state, {row, cell}) {
+            if(state.tableData[row][cell] === CODE.QUESTION_MINE) {
+                Vue.set(state.tableData[row], cell, CODE.MINE);
+            }else {
+                Vue.set(state.tableData[row], cell, CODE.NORMAL);
+            }
 
         },
         [INCREMENT_TIMER](state) {
