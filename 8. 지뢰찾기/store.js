@@ -87,10 +87,38 @@ export default new Vuex.Store({ // import store(아무 이름) from './store'; �
             state.halted = false;
         },
         [OPEN_CELL](state, {row, cell}) {
-            Vue.set(state.tableData[row], cell, CODE.OPENED);
-        },
-        [CLICK_MINE](state) {
 
+            function checkAround() { // 주변 8칸에 지뢰가 몇개 검색
+                let around = [];
+                if(state.tableData[row - 1]) {
+                    around = around.concat([
+                        state.tableData[row - 1][cell - 1], state.tableData[row - 1][cell], state.tableData[row - 1][cell + 1]
+                    ]);
+                }
+                
+                around = around.concat([
+                    state.tableData[row][cell - 1], state.tableData[row][cell + 1],
+                ]);
+
+                if(state.tableData[row + 1]) {
+                    around = around.concat([
+                        state.tableData[row + 1][cell - 1], state.tableData[row + 1][cell], state.tableData[row + 1][cell + 1]
+                    ]);
+                }
+
+                const count = around.filter(function(v) {
+                    return [CODE.MINE, CODE.FLAG_MINE, CODE.QUESTION_MINE].includes(v);
+                })
+
+                return count.length;
+            }
+
+            const count = checkAround();
+            Vue.set(state.tableData[row], cell, count);
+        },
+        [CLICK_MINE](state, {row, cell}) {
+            state.halted = true;
+            Vue.set(state.tableData[row], cell, CODE.CLICKED_MINE);
         },
         [FLAG_CELL](state, {row, cell}) {
             if(state.tableData[row][cell] === CODE.MINE) {
