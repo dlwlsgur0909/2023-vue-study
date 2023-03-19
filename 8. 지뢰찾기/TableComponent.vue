@@ -86,7 +86,6 @@
                     default:
                         return;
                 }
-                this.$store.commit(OPEN_CELL, {row, cell});
             },
             onRightClickTd(row, cell) {
                 if(this.halted) {

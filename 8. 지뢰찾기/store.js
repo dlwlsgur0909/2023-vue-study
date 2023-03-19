@@ -88,8 +88,26 @@ export default new Vuex.Store({ // import store(아무 이름) from './store'; �
         },
         [OPEN_CELL](state, {row, cell}) {
 
-            function checkAround() { // 주변 8칸에 지뢰가 몇개 검색
+            const checked = [];
+            
+            function checkAround(row, cell) { // 주변 8칸에 지뢰가 몇개 검색
+                const checkRowOrCellIsUndefined =  row < 0 || row >= state.tableData.length || cell < 0 || cell >= state.tableData[0].length;
+                if(checkRowOrCellIsUndefined) {
+                    return;
+                }
+
+                if([CODE.OPENED, CODE.FLAG, CODE.FLAG_MINE, CODE.QUESTION, CODE.QUESTION_MINE].includes(state.tableData[row][cell])) {
+                    return;
+                }
+                
+                if(checked.includes(row + '/' + cell)) { // 이미 열린 칸인지 검사 
+                    return; 
+                }else {
+                    checked.push(row + '/' + cell); // 열린 칸 기록
+                }
+
                 let around = [];
+
                 if(state.tableData[row - 1]) {
                     around = around.concat([
                         state.tableData[row - 1][cell - 1], state.tableData[row - 1][cell], state.tableData[row - 1][cell + 1]
@@ -106,15 +124,33 @@ export default new Vuex.Store({ // import store(아무 이름) from './store'; �
                     ]);
                 }
 
-                const count = around.filter(function(v) {
+                const counted = around.filter(function(v) {
                     return [CODE.MINE, CODE.FLAG_MINE, CODE.QUESTION_MINE].includes(v);
-                })
+                });
 
-                return count.length;
+                if(counted.length === 0 && row > -1) { // 주변칸에 지뢰가 하나도 없으면 
+                    const near = [];
+                    if(row - 1 > -1) {
+                        near.push([row - 1, cell - 1]);
+                        near.push([row - 1, cell]);
+                        near.push([row - 1, cell + 1]);
+                    }
+                    near.push([row, cell - 1]);
+                    near.push([row, cell + 1]);
+                    if(row + 1 < state.tableData.length) {
+                        near.push([row + 1, cell - 1]);
+                        near.push([row + 1, cell]);
+                        near.push([row + 1, cell + 1]);
+                    }
+                    near.forEach((n) => {
+                        if(state.tableData[n[0]][n[1]] !== CODE.OPENED) {
+                            checkAround(n[0], n[1]);
+                        }
+                    });
+                }
+                Vue.set(state.tableData[row], cell, counted.length);
             }
-
-            const count = checkAround();
-            Vue.set(state.tableData[row], cell, count);
+            checkAround(row, cell);
         },
         [CLICK_MINE](state, {row, cell}) {
             state.halted = true;
