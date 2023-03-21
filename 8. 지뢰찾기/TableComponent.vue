@@ -31,6 +31,9 @@
                                 background: '#444',
                             };
                         case CODE.CLICKED_MINE:
+                            return {
+                                color: 'red',
+                            }
                         case CODE.OPENED: 
                             return {
                                 background: 'white',

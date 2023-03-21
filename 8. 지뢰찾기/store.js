@@ -91,8 +91,6 @@ export default new Vuex.Store({ // import store(아무 이름) from './store'; �
         },
         [OPEN_CELL](state, {row, cell}) {
 
-            let openedCount = 0;
-
             const checked = [];
             
             function checkAround(row, cell) { // 주변 8칸에 지뢰가 몇개 검색
@@ -102,7 +100,7 @@ export default new Vuex.Store({ // import store(아무 이름) from './store'; �
                     return;
                 }
 
-                if([CODE.OPENED, CODE.FLAG, CODE.FLAG_MINE, CODE.QUESTION, CODE.QUESTION_MINE].includes(state.tableData[row][cell])) {
+                if([CODE.OPENED, CODE.FLAG_MINE, CODE.QUESTION_MINE].includes(state.tableData[row][cell])) {
                     return;
                 }
                 
@@ -130,6 +128,7 @@ export default new Vuex.Store({ // import store(아무 이름) from './store'; �
                     ]);
                 }
 
+                // 주변칸중 지뢰인 칸 저장
                 const counted = around.filter(function(v) {
                     return [CODE.MINE, CODE.FLAG_MINE, CODE.QUESTION_MINE].includes(v);
                 });
@@ -156,24 +155,40 @@ export default new Vuex.Store({ // import store(아무 이름) from './store'; �
                 }
                 // 열린칸 개수 저장
                 if(state.tableData[row][cell] === CODE.NORMAL) {
-                    openedCount += 1;
+                    state.openedCount++;
                 }
                 Vue.set(state.tableData[row], cell, counted.length);
             }
             checkAround(row, cell);
 
-            let halted = false;
-            let result = '';
-            if(state.data.row * state.data.cell - state.data.mine === state.openedCount + openedCount) {
-                halted = true;
-                result = `${state.timer}초만에 승리하셨습니다.`
+            if(state.data.row * state.data.cell - state.data.mine === state.openedCount) {
+                state.halted = true;
+                state.result = `${state.timer}초만에 승리하셨습니다.`
             }
-            state.openedCount += openedCount;
-            state.halted = halted;
-            state.result = result;
+
+            // 수정 전 코드
+
+            //     // 열린칸 개수 저장
+            //     if(state.tableData[row][cell] === CODE.NORMAL) {
+            //         openedCount += 1;
+            //     }
+            //     Vue.set(state.tableData[row], cell, counted.length);
+            // }
+            // checkAround(row, cell);
+
+            // let halted = false;
+            // let result = '';
+            // if(state.data.row * state.data.cell - state.data.mine === state.openedCount + openedCount) {
+            //     halted = true;
+            //     result = `${state.timer}초만에 승리하셨습니다.`
+            // }
+            // state.openedCount += openedCount;
+            // state.halted = halted;
+            // state.result = result;
         },
         [CLICK_MINE](state, {row, cell}) {
             state.halted = true;
+            state.result = "지뢰를 밟으셨네요! 다시 시작해주세요.";
             Vue.set(state.tableData[row], cell, CODE.CLICKED_MINE);
         },
         [FLAG_CELL](state, {row, cell}) {
