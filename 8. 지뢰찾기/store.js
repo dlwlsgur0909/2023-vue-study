@@ -67,6 +67,7 @@ export default new Vuex.Store({ // import store(아무 이름) from './store'; �
         timer: 0,
         halted: true, // 게임 중단 여부
         result: '',
+        openedCount: 0,
 
     }, // vue의 data와 비슷
     getters: {
@@ -74,7 +75,7 @@ export default new Vuex.Store({ // import store(아무 이름) from './store'; �
     }, // vue의 computed와 비슷
     mutations: {
         [START_GAME](state, {row, cell, mine}) {
-            // 주의! data객체 안의 속성을 직접 접근해서 바꾸면 화면에 반영이 안될 수 있다 
+            // 주의! data객체 안의 속성을 직접 접근해서 바꾸면 화면에 반영이 안될 수 있다  (배열, 객체)
             // ex) state.data.row = row  화면 반영 X
             // ex) Vue.set(state.data, 'row', row); 화면 반영 O
             state.data = { 
@@ -85,12 +86,17 @@ export default new Vuex.Store({ // import store(아무 이름) from './store'; �
             state.tableData = plantMine(row, cell, mine);
             state.timer = 0;
             state.halted = false;
+            state.result = '';
+            state.openedCount = 0;
         },
         [OPEN_CELL](state, {row, cell}) {
+
+            let openedCount = 0;
 
             const checked = [];
             
             function checkAround(row, cell) { // 주변 8칸에 지뢰가 몇개 검색
+                
                 const checkRowOrCellIsUndefined =  row < 0 || row >= state.tableData.length || cell < 0 || cell >= state.tableData[0].length;
                 if(checkRowOrCellIsUndefined) {
                     return;
@@ -148,9 +154,23 @@ export default new Vuex.Store({ // import store(아무 이름) from './store'; �
                         }
                     });
                 }
+                // 열린칸 개수 저장
+                if(state.tableData[row][cell] === CODE.NORMAL) {
+                    openedCount += 1;
+                }
                 Vue.set(state.tableData[row], cell, counted.length);
             }
             checkAround(row, cell);
+
+            let halted = false;
+            let result = '';
+            if(state.data.row * state.data.cell - state.data.mine === state.openedCount + openedCount) {
+                halted = true;
+                result = `${state.timer}초만에 승리하셨습니다.`
+            }
+            state.openedCount += openedCount;
+            state.halted = halted;
+            state.result = result;
         },
         [CLICK_MINE](state, {row, cell}) {
             state.halted = true;
