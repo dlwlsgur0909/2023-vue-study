@@ -1,9 +1,10 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import NumberBaseBall from '../3. 숫자야구/NumberBaseball';
+import NumberBaseball from '../3. 숫자야구/NumberBaseball';
 import ResponseCheck from '../4. 반응속도체크/ResponseCheck';
 import RockScissorsPaper from '../5. 가위바위보/RockScissorsPaper';
 import LottoGenerator from '../6. 로또/LottoGenerator';
+import GameMatcher from './GameMatcher';
 
 Vue.use(VueRouter);
 
@@ -16,10 +17,12 @@ export default new VueRouter  ({
     routes: [
         // 컴포넌트가 늘어날 떄마다 routes에 추가를 해주는건 비효율적이므로 
         // 동적(dynamic) route 매칭을 사용한다.
-        { path: '/number-baseball', component: NumberBaseBall },
+
+/*        { path: '/number-baseball', component: NumberBaseball },
         { path: '/response-check', component: ResponseCheck },
         { path: '/rock-scissors-paper', component: RockScissorsPaper },
         { path: '/lotto-generator', component: LottoGenerator },
-        { path: '/game/:name', },
-    ]
+*/
+        { path: '/game/:name', component: GameMatcher }, // dynamic route matching (ex) /game/number-baseball) 
+    ],
 });
